@@ -1,0 +1,70 @@
+from collections import Counter
+from jira import JIRA
+from jira.client import GreenHopper
+import json
+from pprint import pprint
+import re
+import requests
+from requests.auth import HTTPBasicAuth
+
+
+jira = JIRA(basic_auth=('f20140693@goa.bits-pilani.ac.in','kgb156@$'), options={'server': 'https://srisai.atlassian.net'})
+#jira = JIRA(basic_auth=('jirauser_read','jira123$56'), options={'server': 'MD1PRDVMSSQL02'})
+'''
+issue = jira.issue('KON-5', fields='summary,comment')
+print(issue.fields.summary )
+
+#print details of all project
+
+projects = jira.projects()
+print(type(projects[0]))
+jra = jira.project('PRAC')
+print(jra.name)                 
+print(jra.lead.displayName)
+'''
+#creating new issues
+'''
+new_issue = jira.create_issue(project='KON', summary='New issue from jira-python',
+                              description='Look into this one', issuetype={'name': 'Bug'})
+
+new_issue = jira.create_issue(project='KON', summary='ISSUE CREATED SUCCESSFULLY',
+                              description='Look into this one', issuetype={'name': 'Story'})
+'''
+#creating issue list
+'''
+issue_list = [
+{
+    'project': {'key': 'KON'},
+    'summary': 'First issue of many',
+    'description': 'Look into this one',
+    'issuetype': {'name': 'Bug'},
+},
+{
+    'project': {'key': 'KON'},
+    'summary': 'Second issue',
+    'description': 'Another one',
+    'issuetype': {'name': 'Bug'},
+},
+{
+    'project': {'name': 'kondraju'},
+    'summary': 'Last issue',
+    'description': 'Final issue of batch.',
+    'issuetype': {'name': 'Bug'},
+}]
+issues = jira.create_issues(field_list=issue_list)
+'''
+#getting all stories in an epic
+for epic in jira.search_issues("project = FB AND issuetype = 'Epic'", maxResults=20):
+    print('\n This is epic {} '.format(epic))
+    for issue in jira.search_issues('project = FB AND "Epic Link" = {}'.format(epic), maxResults=20):
+        r= requests.get('https://srisai.atlassian.net/rest/api/2/issue/{}'.format(issue), auth=HTTPBasicAuth('f20140693@goa.bits-pilani.ac.in', 'kgb156@$'))
+        p1 = r.json()    
+        s1 = json.dumps(p1)
+        p2 = json.loads(s1)
+        print(p2['fields']['summary'])
+        print(p2['fields']['customfield_10026'])
+    
+    
+
+    
+
