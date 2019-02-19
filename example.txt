@@ -10,3 +10,5 @@ text
 5.a
 6.i
 
+7.kondraju
+Done changes
